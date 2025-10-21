@@ -1,13 +1,11 @@
-use candle_core::{Tensor, Device};
+use candle_core::{Tensor};
 
 pub fn apply_rope(x: &Tensor, sin: &Tensor, cos: &Tensor) -> candle_core::Result<Tensor> {
-    // println!("hello world");
-    // let out = Tensor::new(1.0, &Device::Cpu)?;
-    // let out = x + sin + cos;
+
     let dims = x.dims();
     let head_dim = dims[3];
     let seq_len = dims[2];
-
+    
     assert_eq!(head_dim % 2, 0, "Head dimension must be even");
 
     let half_dim = head_dim / 2;
@@ -15,7 +13,7 @@ pub fn apply_rope(x: &Tensor, sin: &Tensor, cos: &Tensor) -> candle_core::Result
     let x2 = x.narrow(3, half_dim, half_dim);
 
     let cos = cos.narrow(0, 0, seq_len)?.unsqueeze(0)?.unsqueeze(0)?;
-    let sin = cos.narrow(0, 0, seq_len)?.unsqueeze(0)?.unsqueeze(0)?;
+    let sin = sin.narrow(0, 0, seq_len)?.unsqueeze(0)?.unsqueeze(0)?;
 
     let neg_x2 = x2?.neg()?;
 
