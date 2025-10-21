@@ -1,8 +1,13 @@
 mod nn;
 mod rms;
+mod compute_rope_params;
+mod apply_rope;
 
 use nn::{FeedForward};
 use rms::RMSNorm;
+use compute_rope_params::compute_rope_params;
+use apply_rope::apply_rope;
+
 use candle_core::{Device};
 use candle_core::DType;
 use candle_core::Tensor;
@@ -17,7 +22,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let device = Device::Cpu;
     let varmap = VarMap::new();
 
-    //Model
+    //Model layer
     let emb_dim = 1;
     let hidden_dim = 1;
     let batch_size = 1;
